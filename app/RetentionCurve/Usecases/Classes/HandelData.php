@@ -100,10 +100,10 @@ class HandelData implements HandleDataInterface
                 $values[$i] += $values[$i - 1];
             }
 
-            foreach ($values as $key => $value) {
-                $new_width = ($value / $sum) * (100);
+            foreach ($values as $key => $userCountAtThisPoint) {
+                $userCountAtThisPointPrecentage = ($userCountAtThisPoint / $sum) * (100);
 
-                $OnboardingUsersCount->put($keys[$key], $new_width);
+                $OnboardingUsersCount->put($keys[$key], $userCountAtThisPointPrecentage);
             }
         });
         return $arr;
