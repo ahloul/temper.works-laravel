@@ -55,6 +55,10 @@ class HandelData implements HandleDataInterface
         }
         return $userPercentage;
     }
+
+    private function addMissingPoints($arr)
+    {
+
 //1.	Create account - 0%
 //2.	Activate account - 20%
 //3.	Provide profile information - 40%
@@ -63,9 +67,6 @@ class HandelData implements HandleDataInterface
 //6.	Are you a freelancer? - 90%
 //7.	Waiting for approval - 99%
 //8.	Approval - 100%
-
-    private function addMissingPoints($arr)
-    {
 
         $array[100] = [99, 90, 70, 50, 40, 20, 0];
         $array[99] = [90, 70, 50, 40, 20, 0];
@@ -76,6 +77,9 @@ class HandelData implements HandleDataInterface
         $array[20] = [0];
         $array[0] = [0];
         array_walk_recursive($arr, function (collection &$OnboardingUsersCount, $startOfWeek) use ($array) {
+
+            //sort data desc for push missing point.
+            // remove not valid points
             $OnboardingUsersCount = $OnboardingUsersCount->sortKeys(0, true)->filter(function ($value, $key) use ($array) {
                 if ($key != '' && in_array($key, array_keys($array))) {
                     return true;
@@ -83,7 +87,7 @@ class HandelData implements HandleDataInterface
                 return false;
             });
 
-
+           //add missing points
             $OnboardingUsersCount->map(function ($count, $point) use ($OnboardingUsersCount, $array) {
                 $missingPoints = $array[$point];
                 foreach ($missingPoints as $value) {
@@ -92,18 +96,22 @@ class HandelData implements HandleDataInterface
                     }
                 }
             });
-            $OnboardingUsersCount = $OnboardingUsersCount->sortKeys(0, true);
-            $values = $OnboardingUsersCount->values();
-            $keys = $OnboardingUsersCount->keys();
-            $sum = $values->sum();
-            for ($i = 1; $i < count($values); $i++) {
-                $values[$i] += $values[$i - 1];
-            }
 
-            foreach ($values as $key => $userCountAtThisPoint) {
+            //sort again to make sure array is descending
+            $OnboardingUsersCount = $OnboardingUsersCount->sortKeys(0, true);
+            $usersCount = $OnboardingUsersCount->values();
+            $onboardingPoinrs = $OnboardingUsersCount->keys();
+            $sum = $usersCount->sum();
+
+            // sum recursively user count
+            for ($i = 1; $i < count($usersCount); $i++) {
+                $usersCount[$i] += $usersCount[$i - 1];
+            }
+            //convert user count to percentage
+            foreach ($usersCount as $key => $userCountAtThisPoint) {
                 $userCountAtThisPointPrecentage = ($userCountAtThisPoint / $sum) * (100);
 
-                $OnboardingUsersCount->put($keys[$key], $userCountAtThisPointPrecentage);
+                $OnboardingUsersCount->put($onboardingPoinrs[$key], $userCountAtThisPointPrecentage);
             }
         });
         return $arr;
