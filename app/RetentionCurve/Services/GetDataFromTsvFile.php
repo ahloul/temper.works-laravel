@@ -11,7 +11,7 @@ class GetDataFromTsvFile implements ReadFileInterface
 
     public function getDataFromFile(string $filename) :array
     {
-        $filePath = Storage::disk('local')->path($filename);
+        $filePath = Storage::disk('files')->path($filename);
         $file = fopen($filePath, "r");
 
         $parsedData=[];

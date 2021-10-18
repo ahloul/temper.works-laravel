@@ -9,7 +9,7 @@ class GetDataFromJsonFile implements ReadFileInterface
 {
     public function getDataFromFile(string $filename) :array
     {
-        $json = Storage::disk('local')->get($filename);
+        $json = Storage::disk('files')->get($filename);
         return json_decode($json,true);
     }
 }
