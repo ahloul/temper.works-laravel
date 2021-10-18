@@ -18,11 +18,11 @@ services:
     volumes:
       - ./:/var/www
     depends_on:
-      - gateway
+      - temper
     networks:
       temper-api-service-app:
         aliases:
-          - gateway-nginx
+          - temper-nginx
 
 networks:
   temper-api-service-app:

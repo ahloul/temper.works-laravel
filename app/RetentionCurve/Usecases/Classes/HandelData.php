@@ -36,7 +36,7 @@ class HandelData implements HandleDataInterface
 //        dd($collection);
         return $collection->groupBy(function ($user) {
             $created_at = Carbon::parse($user['created_at']);
-            $start = $created_at->startOfWeek()->format('d-m-Y');
+            $start = $created_at->startOfWeek()->format('Y-m-d');
 
             return $start;
 
@@ -47,13 +47,13 @@ class HandelData implements HandleDataInterface
 
     {
 
-        $userPerceage = [];
+        $userPercentage = [];
         foreach ($collection as $startOfWeek => $userData) {
-            $userPerceage[$startOfWeek] = $userData->groupBy(function ($date) {
+            $userPercentage[$startOfWeek] = $userData->groupBy(function ($date) {
                 return $date['onboarding_perentage'];
             })->map->count();
         }
-        return $userPerceage;
+        return $userPercentage;
     }
 //1.	Create account - 0%
 //2.	Activate account - 20%
