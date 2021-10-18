@@ -1,0 +1,30 @@
+version: "3.5"
+
+services:
+  temper-api:
+    container_name: temper-api
+    build: .
+    volumes:
+      - ./:/var/www
+    networks:
+      - temper-api-service-app
+
+  temper-api-nginx:
+    container_name: temper-api-nginx
+    build: ./.docker/nginx
+    restart: always
+    ports:
+      - "8182:80"
+    volumes:
+      - ./:/var/www
+    depends_on:
+      - gateway
+    networks:
+      temper-api-service-app:
+        aliases:
+          - gateway-nginx
+
+networks:
+  temper-api-service-app:
+    name: temper-api-service-app
+    driver: bridge
