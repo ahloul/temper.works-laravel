@@ -112,20 +112,20 @@ class HandelData implements HandleDataInterface
 
     private function transformData($arr)
     {
-        $arr2 = [];
+        $parsedData = [];
 
-        foreach ($arr as $key => $value) {
-            $arr4['week'] = $key;
-            $arr3=[];
+        foreach ($arr as $startOfWeek => $pointsAndUsersCountPercentage) {
+            $singleWeekData['week'] = $startOfWeek;
+            $data=[];
 
-            foreach ($value as $startOfWeak => $Onboarding) {
+            foreach ($pointsAndUsersCountPercentage as $onboardingPoint => $userCountPercentage) {
 
-                $arr3[] = ['x' => $startOfWeak, 'y' => $Onboarding];
+                $data[] = ['x' => $onboardingPoint, 'y' => $userCountPercentage];
             }
 
-            $arr4['data'] = $arr3;
-            $arr2[] = $arr4;
+            $singleWeekData['data'] = $data;
+            $parsedData[] = $singleWeekData;
         }
-        return $arr2;
+        return $parsedData;
     }
 }

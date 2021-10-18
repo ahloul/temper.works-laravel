@@ -1,0 +1,32 @@
+on: [push]
+name: CI
+jobs:
+  phpunit:
+    runs-on: ubuntu-latest
+    container:
+      image: kirschbaumdevelopment/laravel-test-runner:7.4
+
+    steps:
+      - uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+
+      - name: Install composer dependencies
+        working-directory: ./
+
+        run: |
+          composer install --no-scripts
+
+      - name: Prepare Laravel Applications
+        working-directory: ./
+
+        run: |
+          cp .env.example .env
+          php artisan key:generate
+
+      - name: Run Testsuite
+        working-directory: ./
+
+        run: vendor/bin/phpunit tests/
+
+
