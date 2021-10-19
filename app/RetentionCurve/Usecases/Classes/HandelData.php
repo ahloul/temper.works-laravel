@@ -25,15 +25,12 @@ class HandelData implements HandleDataInterface
         $collection = $this->groupDataByWeek($collection);
 
         $data = $this->groupDataByOnboardingPerentage($collection);
-        $data = $this->addMissingPoints($data);
-        $data= $this->transformData($data);
-        return $data;
+        return $this->addMissingPoints($data);
 
     }
 
     private function groupDataByWeek(Collection $collection)
     {
-//        dd($collection);
         return $collection->groupBy(function ($user) {
             $created_at = Carbon::parse($user['created_at']);
             $start = $created_at->startOfWeek()->format('Y-m-d');
@@ -118,22 +115,4 @@ class HandelData implements HandleDataInterface
 
     }
 
-    private function transformData($arr)
-    {
-        $parsedData = [];
-
-        foreach ($arr as $startOfWeek => $pointsAndUsersCountPercentage) {
-            $singleWeekData['week'] = $startOfWeek;
-            $data=[];
-
-            foreach ($pointsAndUsersCountPercentage as $onboardingPoint => $userCountPercentage) {
-
-                $data[] = ['x' => $onboardingPoint, 'y' => $userCountPercentage];
-            }
-
-            $singleWeekData['data'] = $data;
-            $parsedData[] = $singleWeekData;
-        }
-        return $parsedData;
-    }
 }

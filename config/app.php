@@ -180,6 +180,7 @@ return [
         */
         \App\Providers\UseCasesServiceProvider::class,
         \App\Providers\RepositoriesServiceProviders::class,
+        \App\Providers\TransformersServiceProviders::class,
 
     ],
 
